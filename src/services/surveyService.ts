@@ -192,12 +192,7 @@ export async function seedDemoResponses(): Promise<number> {
       answers[q.code] = variation;
     });
 
-      const demoNames: Record<'estudiante' | 'docente' | 'directivo', string[]> = {
-        estudiante: ['Mateo Gómez Restrepo', 'Valeria Santos Miranda', 'Santiago Díaz Peñata'],
-        docente: ['Prof. Carlos Mario Ruiz', 'Lic. Elena Ramos Vergara', 'Prof. Raúl Toscano Miranda'],
-        directivo: ['Dr. Andrés Vergara', 'Dra. Sofía Mendoza', 'Lic. Alberto Jaramillo'],
-      };
-      const participantName = demoNames[role][i % demoNames[role].length];
+      const participantName = `Participante de demostración ${String(i + 1).padStart(2, '0')}`;
       const { dimensionScores, globalScore } = calculateDimensionScores(answers, role);
 
       const submission: SurveySubmission = {

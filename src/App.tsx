@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { getIdTokenResult, onAuthStateChanged, signOut } from 'firebase/auth';
 import { 
   ClipboardList, 
   BarChart3, 
@@ -18,7 +19,7 @@ import {
   LogOut,
   WifiOff
 } from 'lucide-react';
-import { initializeAuth, testConnection } from './firebase';
+import { auth, testConnection } from './firebase';
 import { subscribeToSurveys } from './services/surveyService';
 import { SurveySubmission } from './data/questionnaireData';
 import { SurveyForm } from './components/SurveyForm';
@@ -74,39 +75,75 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Firebase initialization & real-time sync
+  // Restore only Firebase users with a trusted administrator claim.
   useEffect(() => {
-    let unsubscribe: (() => void) | undefined;
-
-    async function init() {
-      try {
-        await initializeAuth();
-        const connected = await testConnection();
-        setFirebaseConnected(connected);
-
-        unsubscribe = subscribeToSurveys(
-          (data) => {
-            setSubmissions(data);
-            setIsLoading(false);
-            setFirebaseConnected(true);
-          },
-          (err) => {
-            console.warn('Real-time subscription warning:', err);
-            setIsLoading(false);
-          }
-        );
-      } catch (err) {
-        console.error('Initialization error:', err);
-        setIsLoading(false);
+    let active = true;
+    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        if (active) {
+          setAuthenticatedUser(null);
+          setIsLoading(false);
+        }
+        return;
       }
-    }
 
-    init();
+      try {
+        const token = await getIdTokenResult(user);
+        if (token.claims.admin !== true) {
+          await signOut(auth);
+          if (active) setAuthenticatedUser(null);
+          return;
+        }
+
+        if (active) {
+          setAuthenticatedUser({
+            email: user.email ?? '',
+            name: user.displayName || 'Administrador',
+            role: 'Administrador',
+          });
+        }
+      } catch (error) {
+        console.warn('No se pudo validar el rol administrativo.', error);
+        await signOut(auth).catch(() => undefined);
+        if (active) {
+          setAuthenticatedUser(null);
+          setIsLoading(false);
+        }
+      }
+    });
+
+    void testConnection().then((connected) => {
+      if (active) setFirebaseConnected(connected);
+    });
 
     return () => {
-      if (unsubscribe) unsubscribe();
+      active = false;
+      unsubscribeAuth();
     };
   }, []);
+
+  // Subscribe to confidential responses only while an admin session is active.
+  useEffect(() => {
+    if (!authenticatedUser || authenticatedUser.role === 'Demostración') {
+      setSubmissions([]);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    return subscribeToSurveys(
+      (data) => {
+        setSubmissions(data);
+        setIsLoading(false);
+        setFirebaseConnected(true);
+      },
+      (error) => {
+        console.warn('No fue posible cargar las respuestas del panel.', error);
+        setIsLoading(false);
+        setFirebaseConnected(false);
+      }
+    );
+  }, [authenticatedUser]);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -139,7 +176,9 @@ export default function App() {
 
   const handleLogout = () => {
     setAuthenticatedUser(null);
+    setSubmissions([]);
     setCurrentView('survey');
+    void signOut(auth).catch((error) => console.warn('No se pudo cerrar la sesión.', error));
   };
 
   return (
@@ -157,10 +196,10 @@ export default function App() {
 
       {/* Top Bar Contract: 3 zones (Brand wordmark - Nav Links - Actions) */}
       <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800/80">
-        <div className="max-w-6xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-3 sm:gap-6">
+        <div className="max-w-6xl mx-auto px-3 sm:px-6 min-h-16 py-2 flex items-center justify-between gap-2 sm:gap-6">
           
           {/* Zone 1: Brand wordmark responsive */}
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-700 flex items-center justify-center text-white shadow-sm shrink-0">
               <School className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
@@ -169,8 +208,9 @@ export default function App() {
               onClick={(e) => { e.preventDefault(); setCurrentView('survey'); }}
               className="text-sm sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white whitespace-nowrap hover:text-blue-700 transition-colors"
             >
+              <span className="sm:hidden min-[361px]:hidden">Gestión</span>
               <span className="hidden sm:inline">Sistema de Gestión Escolar</span>
-              <span className="sm:hidden">Gestión Escolar</span>
+              <span className="hidden min-[361px]:inline sm:hidden">Gestión Escolar</span>
             </a>
           </div>
 
@@ -216,14 +256,15 @@ export default function App() {
           </nav>
 
           {/* Zone 3: Primary action & accessibility toggles */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             
             {/* Keyboard shortcuts trigger */}
             <button
               type="button"
               onClick={() => setIsShortcutsOpen(true)}
-              className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-mono text-slate-600 dark:text-slate-300 flex items-center gap-1 transition-colors"
+              className="hidden sm:flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-mono text-slate-600 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
               title="Ver atajos de teclado (?)"
+              aria-label="Ver atajos de teclado"
             >
               <Keyboard className="w-3.5 h-3.5" />
               <span className="hidden lg:inline text-[11px]">Atajos [?]</span>
@@ -233,8 +274,9 @@ export default function App() {
             <button
               type="button"
               onClick={cycleFontSize}
-              className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-slate-200 text-xs font-bold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
               title={`Tamaño tipográfico: ${fontSize}`}
+              aria-label={`Cambiar tamaño tipográfico; actual: ${fontSize}`}
             >
               A<span className="text-[10px]">{fontSize === 'normal' ? '' : fontSize === 'large' ? '+' : '++'}</span>
             </button>
@@ -243,10 +285,11 @@ export default function App() {
             <button
               type="button"
               onClick={() => setHighContrast(!highContrast)}
-              className={`p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ${
+              className={`flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-slate-200 text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 ${
                 highContrast ? 'text-amber-500 font-bold' : ''
               }`}
               title="Alternar alto contraste"
+              aria-label="Alternar alto contraste"
             >
               <Eye className="w-3.5 h-3.5" />
             </button>
@@ -255,8 +298,9 @@ export default function App() {
             <button
               type="button"
               onClick={toggleDarkMode}
-              className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-slate-200 text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
               title="Alternar tema claro/oscuro"
+              aria-label="Alternar tema claro u oscuro"
             >
               {darkMode ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
             </button>
@@ -266,8 +310,9 @@ export default function App() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="px-3 py-1.5 rounded-xl border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 text-xs font-semibold hover:bg-red-100 transition-colors flex items-center gap-1.5"
+                className="flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-xl border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300"
                 title="Cerrar sesión"
+                aria-label="Cerrar sesión"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Salir</span>
@@ -276,10 +321,11 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setIsLoginModalOpen(true)}
-                className="px-3.5 py-1.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs whitespace-nowrap"
+                className="flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-xl bg-blue-700 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-blue-800 sm:w-auto"
+                aria-label="Acceso al panel institucional"
               >
                 <Lock className="w-3 h-3" />
-                <span>Acceso Docente</span>
+                <span className="hidden sm:inline">Acceso Docente</span>
               </button>
             )}
 
@@ -288,7 +334,7 @@ export default function App() {
       </header>
 
       {/* Main Container */}
-      <main className="max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-6 pb-24 md:pb-8">
+      <main className="max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-6 pb-28 md:pb-8">
         
         {currentView === 'survey' && (
           <SurveyForm
@@ -317,14 +363,14 @@ export default function App() {
       </main>
 
       {/* Mobile Bottom Navigation Bar (Pressman MOB-01 & MOB-02) */}
-      <nav aria-label="Navegación móvil" className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 flex items-center justify-around px-2 py-1.5 shadow-lg">
+      <nav aria-label="Navegación móvil" className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 flex items-center justify-around px-2 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] shadow-lg">
         <button
           type="button"
           onClick={() => {
             setCurrentView('survey');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all ${
+          className={`flex min-h-12 min-w-[56px] flex-col items-center justify-center rounded-xl px-2 py-1.5 transition-all ${
             currentView === 'survey'
               ? 'text-blue-700 dark:text-blue-400 font-bold'
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-800'
@@ -340,7 +386,7 @@ export default function App() {
             handleDashboardClick();
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all relative ${
+          className={`relative flex min-h-12 min-w-[56px] flex-col items-center justify-center rounded-xl px-2 py-1.5 transition-all ${
             currentView === 'dashboard'
               ? 'text-blue-700 dark:text-blue-400 font-bold'
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-800'
@@ -359,7 +405,7 @@ export default function App() {
             setCurrentView('checklist');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all ${
+          className={`flex min-h-12 min-w-[56px] flex-col items-center justify-center rounded-xl px-2 py-1.5 transition-all ${
             currentView === 'checklist'
               ? 'text-blue-700 dark:text-blue-400 font-bold'
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-800'
@@ -372,7 +418,7 @@ export default function App() {
         <button
           type="button"
           onClick={() => setIsShortcutsOpen(true)}
-          className="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 transition-all"
+          className="flex min-h-12 min-w-[56px] flex-col items-center justify-center rounded-xl px-2 py-1.5 text-slate-500 transition-all hover:text-slate-800 dark:text-slate-400"
         >
           <Keyboard className="w-5 h-5 mb-0.5" />
           <span className="text-[10px]">Atajos</span>
@@ -394,6 +440,7 @@ export default function App() {
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
         onLoginSuccess={handleLoginSuccess}
+        onDemoAccess={() => handleLoginSuccess({ email: '', name: 'Vista de demostración', role: 'Demostración' })}
       />
 
       {/* Shortcuts Modal */}

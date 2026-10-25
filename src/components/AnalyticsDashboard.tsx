@@ -98,6 +98,8 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   };
 
   const handleSeed = async () => {
+    if (authenticatedUser?.role === 'Demostración') return;
+
     setIsSeeding(true);
     setSeedSuccessMsg(null);
     try {
@@ -190,15 +192,17 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               </div>
             )}
 
-            <button
-              type="button"
-              onClick={handleSeed}
-              disabled={isSeeding}
-              className="px-3 py-2 rounded-xl text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors flex items-center gap-1.5 disabled:opacity-50"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-              {isSeeding ? 'Generando...' : 'Cargar Simulación'}
-            </button>
+            {authenticatedUser?.role !== 'Demostración' && (
+              <button
+                type="button"
+                onClick={handleSeed}
+                disabled={isSeeding}
+                className="px-3 py-2 rounded-xl text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors flex items-center gap-1.5 disabled:opacity-50"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                {isSeeding ? 'Generando...' : 'Cargar Simulación'}
+              </button>
+            )}
 
             <button
               type="button"
@@ -526,7 +530,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Buscar por nombre del encuestado, código user001..."
+                placeholder="Buscar por nombre o código de participante"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs outline-none focus:ring-2 focus:ring-blue-600"

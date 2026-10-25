@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Lock, Mail, AlertCircle, X, KeyRound, School } from 'lucide-react';
+import { getIdTokenResult, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { AlertCircle, KeyRound, Lock, Mail, ShieldCheck, X } from 'lucide-react';
+import { auth } from '../firebase';
 
 interface AdminLoginModalProps {
   isOpen: boolean;
   onClose: () => void;
   onLoginSuccess: (user: { email: string; name: string; role: string }) => void;
+  onDemoAccess: () => void;
 }
 
 export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
   isOpen,
   onClose,
   onLoginSuccess,
+  onDemoAccess,
 }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,117 +23,120 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleClose = () => {
+    setPassword('');
+    setError(null);
+    onClose();
+  };
+
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setError(null);
     setIsLoading(true);
 
-    setTimeout(() => {
-      // Valid credentials or demo evaluator
-      if (
-        (email.trim().toLowerCase() === 'admin@unicordoba.edu.co' && password === 'Admin2026*') ||
-        (email.trim().toLowerCase() === 'evaluador@unicordoba.edu.co' && password === 'evaluador')
-      ) {
-        onLoginSuccess({
-          email: email.trim().toLowerCase(),
-          name: email.includes('evaluador') ? 'Prof. Raúl Toscano Miranda' : 'Administrador del Sistema',
-          role: 'Docente Evaluador / Directivo',
-        });
-        setIsLoading(false);
-      } else {
-        setError('Credenciales incorrectas. Verifique su correo institucional y contraseña.');
-        setIsLoading(false);
-      }
-    }, 400);
-  };
+    try {
+      const credential = await signInWithEmailAndPassword(auth, email.trim(), password);
+      const token = await getIdTokenResult(credential.user, true);
 
-  const handleDemoEvaluator = () => {
-    setEmail('evaluador@unicordoba.edu.co');
-    setPassword('evaluador');
-    setError(null);
-    onLoginSuccess({
-      email: 'evaluador@unicordoba.edu.co',
-      name: 'Prof. Raúl Toscano Miranda',
-      role: 'Docente Evaluador (Depto. Informática Educativa)',
-    });
+      if (token.claims.admin !== true) {
+        await signOut(auth);
+        throw new Error('Admin access is not enabled for this account.');
+      }
+
+      onLoginSuccess({
+        email: credential.user.email ?? email.trim(),
+        name: credential.user.displayName || 'Administrador',
+        role: 'Administrador',
+      });
+      setPassword('');
+    } catch {
+      setError('No fue posible iniciar sesión con permisos administrativos. Verifica los datos o solicita acceso al administrador.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fadeIn">
-      <div 
-        className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden"
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overscroll-contain bg-slate-950/70 p-3 backdrop-blur-sm sm:p-4">
+      <div
+        className="my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-md overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900 sm:max-h-[calc(100dvh-2rem)]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="login-modal-title"
       >
-        {/* Header */}
-        <div className="px-6 py-5 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center border border-white/20">
-              <Lock className="w-5 h-5 text-blue-300" />
+        <div className="flex items-center justify-between gap-4 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 px-5 py-5 text-white sm:px-6">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/20 bg-white/10">
+              <Lock className="h-5 w-5 text-blue-200" aria-hidden="true" />
             </div>
-            <div>
-              <h3 id="login-modal-title" className="text-base font-bold text-white tracking-tight">
-                Acceso al Panel Institucional
-              </h3>
-              <p className="text-[11px] text-blue-200">
-                Universidad de Córdoba • Informática Educativa
-              </p>
+            <div className="min-w-0">
+              <h2 id="login-modal-title" className="text-base font-bold tracking-tight">
+                Acceso al panel institucional
+              </h2>
+              <p className="mt-1 text-xs text-blue-100">Autenticación segura con Firebase</p>
             </div>
           </div>
           <button
-            onClick={onClose}
-            className="p-1 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition-colors"
-            title="Cerrar ventana"
+            type="button"
+            onClick={handleClose}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-white/80 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-white"
+            aria-label="Cerrar ventana de inicio de sesión"
           >
-            <X className="w-5 h-5" />
+            <X className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
 
-        {/* Content */}
-        <div className="p-6 space-y-4">
-          <div className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-            El acceso a las métricas agregadas, datos confidenciales y exportación de informes está protegido para uso exclusivo del cuerpo directivo y docente evaluador.
-          </div>
+        <div className="space-y-5 p-5 sm:p-6">
+          <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+            El panel requiere una cuenta autenticada con permisos administrativos asignados por la institución.
+          </p>
 
           {error && (
-            <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 text-red-700 dark:text-red-300 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-500" />
+            <div id="login-error" role="alert" className="flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50 p-3.5 text-sm leading-relaxed text-red-800 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
               <span>{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-3.5">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Correo Institucional:
+          <form onSubmit={handleLogin} className="space-y-4" aria-describedby={error ? 'login-error' : undefined}>
+            <div className="space-y-1.5">
+              <label htmlFor="admin-email" className="block text-sm font-semibold text-slate-800 dark:text-slate-200">
+                Correo institucional
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Mail className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden="true" />
                 <input
+                  id="admin-email"
                   type="email"
                   required
-                  placeholder="ej. rtoscano@unicordoba.edu.co"
+                  autoComplete="username"
+                  autoCapitalize="none"
+                  spellCheck={false}
+                  inputMode="email"
+                  placeholder="nombre@institucion.edu"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-600"
+                  onChange={(event) => setEmail(event.target.value)}
+                  className="min-h-12 w-full rounded-xl border border-slate-300 bg-white pl-10 pr-3 text-base text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                  aria-describedby={error ? 'login-error' : undefined}
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Contraseña de Acceso:
+            <div className="space-y-1.5">
+              <label htmlFor="admin-password" className="block text-sm font-semibold text-slate-800 dark:text-slate-200">
+                Contraseña
               </label>
               <div className="relative">
-                <KeyRound className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <KeyRound className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden="true" />
                 <input
+                  id="admin-password"
                   type="password"
                   required
-                  placeholder="••••••••"
+                  autoComplete="current-password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-600"
+                  onChange={(event) => setPassword(event.target.value)}
+                  className="min-h-12 w-full rounded-xl border border-slate-300 bg-white pl-10 pr-3 text-base text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                  aria-describedby={error ? 'login-error' : undefined}
                 />
               </div>
             </div>
@@ -137,27 +144,27 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-700 px-4 text-sm font-bold text-white shadow-sm transition hover:bg-blue-800 focus-visible:outline-blue-700 disabled:cursor-wait disabled:opacity-60"
             >
-              <ShieldCheck className="w-4 h-4" />
-              {isLoading ? 'Verificando...' : 'Iniciar Sesión Institucional'}
+              <ShieldCheck className="h-4 w-4" aria-hidden="true" />
+              {isLoading ? 'Verificando acceso…' : 'Iniciar sesión'}
             </button>
           </form>
 
-          {/* Quick Evaluator Access button for testing */}
-          <div className="pt-3 border-t border-slate-200 dark:border-slate-800">
-            <button
-              type="button"
-              onClick={handleDemoEvaluator}
-              className="w-full py-2 px-3 rounded-xl border border-indigo-200 dark:border-indigo-800/80 bg-indigo-50/70 dark:bg-indigo-950/40 text-indigo-800 dark:text-indigo-200 text-xs font-semibold hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors flex items-center justify-center gap-2"
-            >
-              <School className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-              Acceso Rápido: Prof. Raúl Toscano Miranda (Evaluador)
-            </button>
-            <div className="text-[10px] text-center text-slate-400 mt-1.5 font-mono">
-              Credenciales: admin@unicordoba.edu.co / Admin2026*
+          {import.meta.env.DEV && (
+            <div className="border-t border-slate-200 pt-4 dark:border-slate-800">
+              <button
+                type="button"
+                onClick={onDemoAccess}
+                className="flex min-h-12 w-full items-center justify-center rounded-xl border border-indigo-200 bg-indigo-50 px-4 text-sm font-semibold text-indigo-900 transition hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-100 dark:hover:bg-indigo-900/40"
+              >
+                Acceso rápido a demostración
+              </button>
+              <p className="mt-2 text-center text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+                Solo muestra la interfaz en desarrollo; no autentica ni habilita acceso a respuestas.
+              </p>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

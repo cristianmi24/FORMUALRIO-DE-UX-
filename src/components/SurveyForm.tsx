@@ -329,17 +329,17 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
       
       {/* Toast Notification for Draft/Undo */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-medium shadow-2xl flex items-center gap-2 border border-slate-700 animate-slideUp">
+        <div role="status" aria-live="polite" className="fixed bottom-20 left-4 right-4 z-50 mx-auto flex max-w-md items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm font-medium text-white shadow-2xl animate-slideUp sm:bottom-6 sm:left-auto sm:right-6">
           <CheckCircle2 className="w-4 h-4 text-emerald-400" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Top Breadcrumbs & Utility Bar (Pressman UX-01 & PAT-02) */}
-      <div className="px-6 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/40 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/40 flex flex-wrap items-center justify-between gap-3 text-xs sm:px-6">
         
         {/* Breadcrumb Trail */}
-        <nav aria-label="Migas de pan" className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+        <nav aria-label="Migas de pan" className="flex min-w-0 flex-wrap items-center gap-1.5 text-slate-500 dark:text-slate-400">
           <button 
             type="button" 
             onClick={() => setCurrentStep(0)} 
@@ -383,7 +383,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
       </div>
 
       {/* Main Header */}
-      <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-4">
+      <div className="px-4 py-4 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-4 sm:px-6">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-blue-700 dark:text-blue-400">
@@ -405,7 +405,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
               </span>
               <span className="text-[10px] text-slate-400 block">{globalProgress}% respondido</span>
             </div>
-            <div className="w-28 sm:w-36 bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+            <div role="progressbar" aria-label="Progreso del cuestionario" aria-valuemin={0} aria-valuemax={100} aria-valuenow={globalProgress} className="w-28 sm:w-36 bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
               <div 
                 className="bg-blue-600 h-full transition-all duration-300 rounded-full"
                 style={{ width: `${globalProgress}%` }}
@@ -417,7 +417,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
 
       {/* Horizontal Category Stepper Tabs (Chunking Miller 7±2, UX-03) */}
       {currentStep > 0 && currentStep < 6 && (
-        <div className="px-6 py-2 bg-slate-50/60 dark:bg-slate-950/60 border-b border-slate-200 dark:border-slate-800 flex overflow-x-auto gap-1.5 text-xs scrollbar-none">
+        <div role="navigation" aria-label="Pasos del cuestionario" className="px-4 py-2 bg-slate-50/60 dark:bg-slate-950/60 border-b border-slate-200 dark:border-slate-800 flex overflow-x-auto gap-1.5 text-xs scrollbar-none sm:px-6">
           {[
             { step: 1, label: '1. UX General (10)' },
             { step: 2, label: '2. UI Visual (9)' },
@@ -428,6 +428,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
             <button
               key={cat.step}
               type="button"
+              aria-current={currentStep === cat.step ? 'step' : undefined}
               onClick={() => {
                 if (currentStep > cat.step || validateStep(currentStep)) {
                   setCurrentStep(cat.step);
@@ -449,9 +450,9 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
       )}
 
       {/* Body Content */}
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         {errorMessage && (
-          <div className="mb-6 p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 text-red-700 dark:text-red-300 flex items-start gap-3 text-xs leading-relaxed">
+          <div role="alert" aria-live="assertive" className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm leading-relaxed text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
             <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-500" />
             <div>
               <span className="font-bold block">Por favor verifique:</span>
@@ -484,12 +485,13 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
                 </h3>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed italic">
-                "Su participación es voluntaria y anónima. No se solicitarán contraseñas ni información sensible. Las respuestas se almacenarán de forma agregada en Firebase para fines académicos y de mejora continua."
+                "Su participación es voluntaria. Se solicitará el nombre de la persona evaluada para identificar la respuesta; no incluya contraseñas ni información sensible. Las respuestas se almacenarán en Firebase para fines académicos y de mejora continua."
               </p>
 
               <div className="grid sm:grid-cols-2 gap-3 pt-1">
                 <button
                   type="button"
+                  aria-pressed={consentAccepted === true}
                   onClick={() => setConsentAccepted(true)}
                   className={`p-3.5 rounded-xl border text-left flex items-center gap-3 transition-all ${
                     consentAccepted === true
@@ -512,6 +514,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
 
                 <button
                   type="button"
+                  aria-pressed={consentAccepted === false}
                   onClick={() => setConsentAccepted(false)}
                   className={`p-3.5 rounded-xl border text-left flex items-center gap-3 transition-all ${
                     consentAccepted === false
@@ -551,9 +554,11 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
               <input
                 id="participant-name-input"
                 type="text"
+                autoComplete="name"
+                maxLength={120}
                 value={participantName}
                 onChange={(e) => setParticipantName(e.target.value)}
-                placeholder="Ej. Juan David Martínez o Prof. Raúl Toscano Miranda"
+                placeholder="Escriba el nombre de la persona evaluada"
                 className="w-full px-3.5 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all shadow-xs"
               />
               <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-blue-100 dark:border-blue-900/40 text-xs">
@@ -581,10 +586,10 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
 
             {/* Role Selection (UX-05 Persona modeling) */}
             <div className="space-y-3">
-              <label className="block text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+              <p id="role-selection-label" className="block text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                 Seleccione su Rol en la Institución:
-              </label>
-              <div className="grid sm:grid-cols-3 gap-3">
+              </p>
+              <div role="group" aria-labelledby="role-selection-label" className="grid sm:grid-cols-3 gap-3">
                 {[
                   { id: 'estudiante', title: 'Estudiante', desc: 'Consulta notas, horarios, boletines y exámenes' },
                   { id: 'docente', title: 'Docente', desc: 'Registra calificaciones, asistencia y crea exámenes' },
@@ -593,8 +598,9 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
                   <button
                     key={item.id}
                     type="button"
+                    aria-pressed={role === item.id}
                     onClick={() => setRole(item.id as any)}
-                    className={`p-3.5 rounded-xl border text-left transition-all ${
+                    className={`min-h-12 p-3.5 rounded-xl border text-left transition-all ${
                       role === item.id
                         ? 'border-blue-600 bg-blue-50/60 dark:bg-blue-950/40 ring-2 ring-blue-500/20 font-bold'
                         : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 bg-white dark:bg-slate-800'
@@ -610,10 +616,11 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
             {/* Device & Frequency */}
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                <label htmlFor="primary-device" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Dispositivo Principal Utilizado:
                 </label>
                 <select
+                  id="primary-device"
                   value={device}
                   onChange={(e) => setDevice(e.target.value)}
                   className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-blue-600"
@@ -627,10 +634,11 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                <label htmlFor="usage-frequency" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Frecuencia de Uso del Sistema:
                 </label>
                 <select
+                  id="usage-frequency"
                   value={frequency}
                   onChange={(e) => setFrequency(e.target.value)}
                   className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-blue-600"
@@ -645,11 +653,11 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
             </div>
 
             {/* Bottom Actions */}
-            <div className="flex justify-between items-center pt-4 border-t border-slate-200 dark:border-slate-800">
+            <div className="flex flex-col-reverse items-stretch gap-3 border-t border-slate-200 pt-4 dark:border-slate-800 sm:flex-row sm:items-center sm:justify-between">
               <button
                 type="button"
                 onClick={onGoToDashboard}
-                className="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1.5"
+                className="flex min-h-12 w-full items-center justify-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold transition-colors hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 sm:w-auto"
               >
                 <BarChart3 className="w-4 h-4 text-blue-600" />
                 Acceso al Panel Institucional
@@ -659,7 +667,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
                 type="button"
                 onClick={goToNextStep}
                 disabled={consentAccepted !== true}
-                className="px-6 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 disabled:bg-slate-300 dark:disabled:bg-slate-800 text-white text-xs font-bold transition-all flex items-center gap-2 shadow-sm disabled:cursor-not-allowed"
+                className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-700 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-slate-300 dark:disabled:bg-slate-800 sm:w-auto"
               >
                 Comenzar Categoría 1 (UX)
                 <ArrowRight className="w-4 h-4" />
@@ -726,6 +734,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
                           <button
                             key={opt.value}
                             type="button"
+                            aria-pressed={isChecked}
                             onClick={() => handleLikertSelect(q.code, opt.value)}
                             className={`min-h-[48px] py-2 px-2 rounded-xl text-xs font-medium text-center border transition-all flex flex-col items-center justify-center gap-0.5 active:scale-95 ${
                               isChecked
@@ -751,20 +760,21 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
               <div className="pt-6 border-t border-slate-200 dark:border-slate-800 space-y-4">
                 {/* NPS Question */}
                 <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-                  <label className="block text-xs font-bold text-slate-800 dark:text-white">
+                  <p id="nps-question-label" className="block text-sm font-bold text-slate-800 dark:text-white">
                     En una escala de 0 a 10, ¿qué tan probable es que recomiende el Sistema de Gestión Escolar? (NPS)
-                  </label>
+                  </p>
                   <div className="flex justify-between text-[11px] text-slate-400 font-medium px-1">
                     <span>0 = Nada probable</span>
                     <span>10 = Muy probable</span>
                   </div>
-                  <div className="flex flex-wrap sm:grid sm:grid-cols-11 gap-1.5 justify-center sm:justify-start">
+                  <div role="group" aria-labelledby="nps-question-label" className="flex flex-wrap justify-center gap-1.5 sm:grid sm:grid-cols-11 sm:justify-start">
                     {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((score) => (
                       <button
                         key={score}
                         type="button"
+                        aria-pressed={npsScore === score}
                         onClick={() => setNpsScore(score)}
-                        className={`w-9 sm:w-auto h-10 min-w-[36px] rounded-lg text-xs font-bold font-mono border transition-all active:scale-95 flex items-center justify-center ${
+                        className={`h-11 min-w-[44px] rounded-lg border text-sm font-bold font-mono transition-all active:scale-95 flex items-center justify-center sm:w-auto ${
                           npsScore === score
                             ? score >= 9
                               ? 'bg-emerald-600 text-white border-emerald-600 ring-2 ring-emerald-500/30'
@@ -783,28 +793,30 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
                 {/* Qualitative open feedback */}
                 <div className="grid sm:grid-cols-2 gap-3 pt-2">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    <label htmlFor="positive-feedback" className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
                       ¿Qué es lo que más le gusta del sistema?
                     </label>
                     <textarea
+                      id="positive-feedback"
                       rows={2}
                       value={qualitative.loQueMasGusta}
                       onChange={(e) => setQualitative({ ...qualitative, loQueMasGusta: e.target.value })}
                       placeholder="Aspectos positivos o funciones útiles..."
-                      className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full min-h-24 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-base outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    <label htmlFor="improvement-feedback" className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
                       ¿Qué es lo que más debería mejorarse?
                     </label>
                     <textarea
+                      id="improvement-feedback"
                       rows={2}
                       value={qualitative.loQueDebeMejorar}
                       onChange={(e) => setQualitative({ ...qualitative, loQueDebeMejorar: e.target.value })}
                       placeholder="Dificultades o funciones a corregir..."
-                      className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full min-h-24 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-base outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </div>
                 </div>
@@ -816,7 +828,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
               <button
                 type="button"
                 onClick={goToPrevStep}
-                className="w-full sm:w-auto px-4 py-3 sm:py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center justify-center gap-1.5"
+                className="flex min-h-12 w-full items-center justify-center gap-1.5 rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold transition-colors hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 sm:w-auto sm:py-2"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Anterior
