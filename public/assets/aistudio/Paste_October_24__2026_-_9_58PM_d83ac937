@@ -1,0 +1,535 @@
+## Cuestionario integrado de UX y UI para el Sistema de Gestión Escolar
+
+El siguiente instrumento está diseñado para evaluar el sistema desde la perspectiva de **estudiantes, docentes y directivos/administradores**. Se adapta a los módulos descritos en `DOCUMENTACION.md`: calificaciones, asistencia, boletines, exámenes, horarios, alertas, comunicación, cursos, usuarios y configuración.
+
+El cuestionario combina:
+
+- **UX:** utilidad, facilidad de aprendizaje, eficiencia, satisfacción, confianza y cumplimiento de tareas.
+- **UI:** claridad visual, navegación, colores, tipografía, botones, formularios, mensajes y accesibilidad.
+- **Usabilidad:** efectividad, eficiencia y satisfacción, conceptos relacionados con ISO 9241-11. ([committee.iso.org](https://committee.iso.org/standard/63500.html?utm_source=openai))
+- **Heurísticas de Nielsen:** visibilidad del estado, consistencia, prevención de errores, control del usuario, reconocimiento y recuperación ante errores. ([nngroup.com](https://www.nngroup.com/articles/ten-usability-heuristics/?trk=article-ssr-frontend-pulse_x-social-details_comments-action_comment-text&utm_source=openai))
+- **Accesibilidad:** principios perceptible, operable, comprensible y robusto de WCAG 2.2. ([w3.org](https://www.w3.org/TR/wcag/?utm_source=openai))
+- **Derechos de las personas con discapacidad:** acceso igualitario a la información, las comunicaciones y las tecnologías, según la Convención de la ONU sobre los Derechos de las Personas con Discapacidad. ([un.org](https://www.un.org/development/desa/disabilities/convention-on-the-rights-of-persons-with-disabilities/article-9-%20accessibility.html?utm_source=openai))
+- **Privacidad desde el diseño:** minimización de datos, protección y configuración segura por defecto, tomando como referencia el artículo 25 del RGPD europeo. ([eur-lex.europa.eu](https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CONSIL%3APE_17_2016_INIT&utm_source=openai))
+
+> **Nota metodológica:** este es un cuestionario académico adaptado al sistema. No debe presentarse como una escala psicológica o científica completamente validada. Para una medición estandarizada adicional, se puede aplicar el cuestionario SUS de John Brooke, que utiliza 10 afirmaciones y una escala de 1 a 5. ([site.unibo.it](https://site.unibo.it/hfrs/en/questionnaire-and-scales-2/sus?utm_source=openai))
+
+---
+
+# 1. Título del formulario
+
+**Evaluación de experiencia de usuario e interfaz de usuario del Sistema de Gestión Escolar**
+
+## Descripción para los participantes
+
+> El objetivo de este cuestionario es conocer la experiencia de estudiantes, docentes y directivos al utilizar el Sistema de Gestión Escolar.  
+>  
+> Las respuestas serán utilizadas exclusivamente con fines académicos y de mejora del sistema. No existen respuestas correctas o incorrectas. Responda de acuerdo con su experiencia real.  
+>  
+> La encuesta toma aproximadamente entre 8 y 12 minutos.
+
+---
+
+# 2. Consentimiento informado
+
+**Pregunta obligatoria — opción única**
+
+¿Acepta participar voluntariamente en esta evaluación?
+
+- Sí, acepto participar.
+- No, no deseo participar.
+
+Si responde **“No”**, finalizar el formulario.
+
+### Texto recomendado
+
+> Su participación es voluntaria. Puede retirarse en cualquier momento. No se solicitarán contraseñas ni información innecesaria. Los resultados se analizarán de manera agregada y no se utilizarán para afectar sus calificaciones, funciones laborales o relación con la institución.
+
+Esto es coherente con un enfoque de privacidad desde el diseño y minimización de datos. ([eur-lex.europa.eu](https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CONSIL%3APE_17_2016_INIT&utm_source=openai))
+
+---
+
+# 3. Información general del participante
+
+## 3.1 Rol
+
+**Tipo:** selección única
+
+¿Cuál es su relación con el sistema?
+
+- Estudiante
+- Docente
+- Directivo o administrador
+
+> Si en la institución existe el cargo de director de grupo, puede incluirse dentro de “Docente” o “Directivo”, según sus permisos reales en la plataforma.
+
+## 3.2 Frecuencia de uso
+
+¿Con qué frecuencia utiliza el sistema?
+
+- Todos los días
+- Varias veces por semana
+- Una vez por semana
+- Algunas veces al mes
+- Es mi primera experiencia o casi no lo utilizo
+
+## 3.3 Medio utilizado
+
+¿Qué medio utiliza principalmente?
+
+- Computador de escritorio
+- Computador portátil
+- Tablet
+- Teléfono celular
+- Aplicación Android
+- Otro
+
+## 3.4 Experiencia tecnológica
+
+¿Cómo considera su experiencia utilizando plataformas digitales?
+
+- Muy baja
+- Baja
+- Media
+- Alta
+- Muy alta
+
+## 3.5 Accesibilidad
+
+¿Tiene alguna condición o necesidad que deba considerarse para facilitar el uso de sistemas digitales?
+
+- No
+- Dificultad visual
+- Dificultad auditiva
+- Dificultad motora
+- Dificultad de aprendizaje o concentración
+- Otra
+- Prefiero no responder
+
+Esta pregunta debe ser opcional. No se deben solicitar diagnósticos médicos ni información clínica.
+
+---
+
+# 4. Escala de respuesta
+
+Para las siguientes afirmaciones utilice la escala:
+
+| Valor | Significado |
+|---:|---|
+| 1 | Totalmente en desacuerdo |
+| 2 | En desacuerdo |
+| 3 | Ni de acuerdo ni en desacuerdo |
+| 4 | De acuerdo |
+| 5 | Totalmente de acuerdo |
+| N/A | No aplica o no he utilizado esta función |
+
+---
+
+# 5. Evaluación general de UX y UI
+
+Estas preguntas deben ser respondidas por los tres roles.
+
+## A. Utilidad y cumplimiento de objetivos — UX
+
+| Código | Afirmación |
+|---|---|
+| UX01 | El sistema me permite realizar las actividades que necesito para mi rol. |
+| UX02 | Las funciones disponibles son útiles para mis actividades académicas o administrativas. |
+| UX03 | La información presentada corresponde con mis necesidades. |
+| UX04 | Puedo encontrar rápidamente la función que necesito. |
+| UX05 | El sistema me ayuda a ahorrar tiempo frente a procesos manuales. |
+| UX06 | La información de calificaciones, asistencia, horarios o alertas es fácil de comprender. |
+| UX07 | El sistema facilita la comunicación entre los integrantes de la comunidad educativa. |
+| UX08 | El sistema me permite completar mis tareas sin depender constantemente de otra persona. |
+
+Estas afirmaciones evalúan la capacidad del usuario para alcanzar sus objetivos con efectividad, eficiencia y satisfacción, de acuerdo con la concepción de usabilidad de ISO 9241-11. ([committee.iso.org](https://committee.iso.org/standard/63500.html?utm_source=openai))
+
+## B. Facilidad de aprendizaje y uso
+
+| Código | Afirmación |
+|---|---|
+| UX09 | Aprendí a utilizar el sistema rápidamente. |
+| UX10 | Las opciones del menú son fáciles de entender. |
+| UX11 | Las instrucciones y textos del sistema son claros. |
+| UX12 | Los nombres de los módulos corresponden con las actividades que realizan. |
+| UX13 | Recuerdo fácilmente cómo volver a realizar una tarea que ya hice antes. |
+| UX14 | Una persona nueva podría aprender a utilizar el sistema sin demasiada ayuda. |
+| UX15 | El sistema funciona de manera similar en sus diferentes módulos. |
+
+Estas preguntas consideran el principio de **correspondencia entre el sistema y el mundo real**, la consistencia y el reconocimiento antes que la memorización, propuestos por Nielsen. ([nngroup.com](https://www.nngroup.com/articles/ten-usability-heuristics/?trk=article-ssr-frontend-pulse_x-social-details_comments-action_comment-text&utm_source=openai))
+
+## C. Navegación y control del usuario
+
+| Código | Afirmación |
+|---|---|
+| UX16 | Sé en qué sección del sistema me encuentro. |
+| UX17 | El sistema muestra claramente qué acción se está ejecutando. |
+| UX18 | Recibo confirmación cuando una acción se guarda correctamente. |
+| UX19 | Puedo cancelar una acción antes de confirmarla. |
+| UX20 | Puedo corregir fácilmente un dato ingresado por error. |
+| UX21 | El sistema me permite regresar a la pantalla anterior sin perder información. |
+| UX22 | Los botones de guardar, cancelar, editar y eliminar son fáciles de distinguir. |
+
+Estas preguntas evalúan la visibilidad del estado del sistema y el control y libertad del usuario, dos principios de Nielsen. ([nngroup.com](https://www.nngroup.com/articles/ten-usability-heuristics/?trk=article-ssr-frontend-pulse_x-social-details_comments-action_comment-text&utm_source=openai))
+
+## D. Formularios y prevención de errores
+
+| Código | Afirmación |
+|---|---|
+| UX23 | Los formularios solicitan únicamente la información necesaria. |
+| UX24 | Los campos obligatorios están claramente identificados. |
+| UX25 | El sistema me avisa cuando introduzco un dato incorrecto. |
+| UX26 | Los mensajes de error explican qué ocurrió. |
+| UX27 | Los mensajes de error indican cómo solucionar el problema. |
+| UX28 | El sistema evita que confirme accidentalmente una acción importante. |
+| UX29 | El sistema conserva la información cuando ocurre un error o falla de conexión. |
+
+Estas preguntas se relacionan con la prevención de errores, el reconocimiento, el diagnóstico y la recuperación ante errores. ([nngroup.com](https://www.nngroup.com/articles/ten-usability-heuristics/?trk=article-ssr-frontend-pulse_x-social-details_comments-action_comment-text&utm_source=openai))
+
+## E. Confianza, privacidad y seguridad
+
+| Código | Afirmación |
+|---|---|
+| UX30 | Me siento seguro utilizando el sistema. |
+| UX31 | Comprendo qué sucede con la información que registro. |
+| UX32 | Considero que cada rol solo puede acceder a la información que necesita. |
+| UX33 | Los mensajes relacionados con contraseñas, acceso y recuperación son claros. |
+| UX34 | El sistema solicita confirmación antes de acciones delicadas, como eliminar información. |
+| UX35 | Confío en la información mostrada por el sistema. |
+
+Estas preguntas son importantes porque el sistema maneja calificaciones, asistencia, boletines, datos personales, alertas y comunicaciones. El RGPD utiliza la protección de datos desde el diseño y por defecto como referencia internacional para este tipo de evaluación. ([eur-lex.europa.eu](https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CONSIL%3APE_17_2016_INIT&utm_source=openai))
+
+---
+
+# 6. Evaluación de la interfaz visual — UI
+
+## A. Organización visual
+
+| Código | Afirmación |
+|---|---|
+| UI01 | La distribución de los elementos en pantalla es ordenada. |
+| UI02 | La información más importante se identifica fácilmente. |
+| UI03 | Los títulos y subtítulos ayudan a comprender cada pantalla. |
+| UI04 | La cantidad de información presentada en cada pantalla es adecuada. |
+| UI05 | Las tablas, tarjetas y paneles son fáciles de interpretar. |
+| UI06 | Los íconos utilizados son fáciles de reconocer. |
+| UI07 | Las pantallas mantienen un diseño coherente entre sí. |
+
+## B. Colores, tipografía y legibilidad
+
+| Código | Afirmación |
+|---|---|
+| UI08 | El tamaño de la letra es adecuado. |
+| UI09 | El contraste entre el texto y el fondo facilita la lectura. |
+| UI10 | Los colores utilizados ayudan a diferenciar estados, alertas o categorías. |
+| UI11 | La información no depende únicamente del color para ser comprendida. |
+| UI12 | Los botones y enlaces se distinguen claramente. |
+| UI13 | Puedo leer correctamente la interfaz desde el dispositivo que utilizo. |
+| UI14 | Las alertas visuales llaman la atención sin resultar confusas o excesivas. |
+
+WCAG 2.2 organiza la accesibilidad alrededor de cuatro principios: que la interfaz sea **perceptible, operable, comprensible y robusta**. También recomienda proporcionar alternativas para contenidos no textuales y que los controles tengan nombres comprensibles. ([w3.org](https://www.w3.org/TR/wcag/?utm_source=openai))
+
+## C. Diseño responsive y aplicación móvil
+
+| Código | Afirmación |
+|---|---|
+| UI15 | El sistema se adapta correctamente al tamaño de mi pantalla. |
+| UI16 | Puedo utilizar el sistema cómodamente desde un celular. |
+| UI17 | Los botones tienen un tamaño adecuado para ser seleccionados. |
+| UI18 | No necesito desplazarme excesivamente para completar una tarea. |
+| UI19 | La aplicación móvil y la versión web presentan información coherente. |
+| UI20 | Las notificaciones del sistema son claras y útiles. |
+
+---
+
+# 7. Preguntas específicas para estudiantes
+
+Mostrar esta sección únicamente si el participante selecciona **Estudiante**.
+
+| Código | Afirmación |
+|---|---|
+| EST01 | Puedo consultar mis calificaciones sin dificultad. |
+| EST02 | Comprendo cómo se calculan o presentan mis resultados académicos. |
+| EST03 | Puedo revisar mi asistencia por materia y fecha. |
+| EST04 | Puedo consultar mi horario rápidamente. |
+| EST05 | Puedo descargar o visualizar mi boletín sin dificultad. |
+| EST06 | Puedo identificar fácilmente los exámenes activos. |
+| EST07 | El proceso para presentar un examen es claro. |
+| EST08 | El sistema muestra mi avance durante un examen. |
+| EST09 | Las alertas académicas son claras y comprensibles. |
+| EST10 | Sé cómo marcar una alerta como leída. |
+| EST11 | Sé cómo comunicarme con un docente o director de grupo. |
+| EST12 | La aplicación móvil resulta cómoda para consultar mi información. |
+| EST13 | La información que veo corresponde únicamente a mis datos académicos. |
+| EST14 | El sistema me ayuda a hacer seguimiento a mi rendimiento académico. |
+
+## Tareas sugeridas para evaluar a estudiantes
+
+Antes de responder, solicite al estudiante realizar, si es posible, estas tareas:
+
+1. Consultar una calificación.
+2. Revisar una inasistencia.
+3. Consultar el horario.
+4. Abrir una alerta.
+5. Consultar o descargar el boletín.
+6. Ubicar un examen activo.
+7. Enviar un mensaje a un docente.
+
+Después, preguntar:
+
+| Pregunta | Tipo |
+|---|---|
+| ¿Pudo completar la tarea? | Sí / Parcialmente / No |
+| ¿Qué tan fácil fue realizarla? | Escala de 1 a 5 |
+| ¿Cuánto tiempo aproximadamente tardó? | Respuesta numérica o rangos |
+| ¿En qué parte tuvo dificultad? | Respuesta abierta |
+
+---
+
+# 8. Preguntas específicas para docentes
+
+Mostrar esta sección únicamente si el participante selecciona **Docente**.
+
+| Código | Afirmación |
+|---|---|
+| DOC01 | Puedo encontrar rápidamente mis cursos asignados. |
+| DOC02 | El registro de calificaciones es claro y eficiente. |
+| DOC03 | Puedo corregir una calificación sin dificultad. |
+| DOC04 | El sistema muestra claramente el período académico seleccionado. |
+| DOC05 | El registro de asistencia es rápido. |
+| DOC06 | Es claro cuándo se registra la hora de asistencia. |
+| DOC07 | Puedo diferenciar fácilmente entre una asistencia, inasistencia, tardanza o justificación. |
+| DOC08 | Puedo crear actividades y asignarles porcentajes correctamente. |
+| DOC09 | El sistema ayuda a evitar errores al ingresar notas. |
+| DOC10 | Puedo crear o configurar un examen fácilmente. |
+| DOC11 | La generación de exámenes con IA es fácil de comprender. |
+| DOC12 | Puedo revisar y modificar adecuadamente las preguntas generadas. |
+| DOC13 | Puedo consultar las respuestas o resultados de los estudiantes. |
+| DOC14 | Puedo enviar mensajes o solicitudes a la administración. |
+| DOC15 | Puedo consultar mi horario sin dificultad. |
+| DOC16 | Si soy director de grupo, puedo consultar alertas y observaciones de mi grupo. |
+| DOC17 | Los permisos de acceso corresponden a mis funciones como docente. |
+
+## Tareas sugeridas para docentes
+
+1. Seleccionar un curso.
+2. Registrar una calificación.
+3. Corregir una calificación.
+4. Registrar asistencia.
+5. Crear una actividad.
+6. Crear un examen.
+7. Consultar un boletín.
+8. Enviar un mensaje a administración.
+9. Consultar el horario.
+10. Si aplica, registrar una observación como director de grupo.
+
+---
+
+# 9. Preguntas específicas para directivos o administradores
+
+Mostrar esta sección únicamente si el participante selecciona **Directivo o administrador**.
+
+| Código | Afirmación |
+|---|---|
+| ADM01 | El panel administrativo presenta un resumen útil de la institución. |
+| ADM02 | Puedo crear y editar usuarios sin dificultad. |
+| ADM03 | La carga masiva de estudiantes es clara. |
+| ADM04 | Puedo crear cursos y asignar docentes correctamente. |
+| ADM05 | La matrícula de estudiantes es fácil de realizar. |
+| ADM06 | Puedo consultar información de estudiantes y docentes rápidamente. |
+| ADM07 | Puedo crear y organizar horarios de forma eficiente. |
+| ADM08 | Puedo consultar y generar boletines sin dificultad. |
+| ADM09 | Puedo enviar alertas o comunicados institucionales correctamente. |
+| ADM10 | Es claro el estado de una alerta: enviada, leída o resuelta. |
+| ADM11 | La configuración de períodos académicos es comprensible. |
+| ADM12 | El bloqueo o apertura de notas y asistencia es fácil de configurar. |
+| ADM13 | El sistema evita errores en acciones administrativas importantes. |
+| ADM14 | Puedo comprobar que la información se guardó correctamente. |
+| ADM15 | Los permisos administrativos son claros y apropiados. |
+| ADM16 | La información presentada facilita la toma de decisiones institucionales. |
+| ADM17 | Puedo localizar rápidamente un estudiante, docente, curso o grupo. |
+| ADM18 | El sistema reduce el trabajo manual de la administración escolar. |
+
+## Tareas sugeridas para directivos
+
+1. Crear o buscar un estudiante.
+2. Crear un curso.
+3. Asignar un docente.
+4. Matricular estudiantes.
+5. Crear un horario.
+6. Consultar un boletín.
+7. Enviar una alerta institucional.
+8. Asignar un director de grupo.
+9. Modificar una configuración académica.
+10. Consultar el estado de una alerta o mensaje.
+
+---
+
+# 10. Accesibilidad e inclusión
+
+Estas preguntas deben aplicarse a todos los roles.
+
+| Código | Afirmación |
+|---|---|
+| ACC01 | Puedo utilizar el sistema aunque tenga dificultades visuales, auditivas, motoras o de aprendizaje. |
+| ACC02 | Los textos tienen un lenguaje claro y fácil de comprender. |
+| ACC03 | Los formularios pueden utilizarse sin depender únicamente del mouse o la pantalla táctil. |
+| ACC04 | Los mensajes importantes se presentan de más de una forma, por ejemplo, texto, color o ícono. |
+| ACC05 | Las imágenes o íconos importantes tienen una explicación comprensible. |
+| ACC06 | Las alertas no dependen exclusivamente del color. |
+| ACC07 | Puedo ampliar el contenido sin perder información o funcionalidad. |
+| ACC08 | El sistema funciona correctamente con lectores de pantalla u otras ayudas técnicas, si las he utilizado. |
+| ACC09 | La interfaz evita movimientos, parpadeos o efectos que puedan causar molestias. |
+| ACC10 | Considero que el sistema permite el acceso en igualdad de condiciones. |
+
+La Convención de la ONU establece que las personas con discapacidad deben tener acceso, en igualdad de condiciones, a la información, las comunicaciones, Internet y las tecnologías de la información. ([un.org](https://www.un.org/development/desa/disabilities/convention-on-the-rights-of-persons-with-disabilities/article-9-%20accessibility.html?utm_source=openai))
+
+---
+
+# 11. Satisfacción global
+
+| Código | Pregunta |
+|---|---|
+| SAT01 | En general, estoy satisfecho con el sistema. |
+| SAT02 | Considero que el sistema es agradable de utilizar. |
+| SAT03 | Recomendaría el uso de este sistema dentro de la institución. |
+| SAT04 | El sistema cumple con mis expectativas. |
+| SAT05 | Volvería a utilizar el sistema para realizar mis actividades. |
+
+## Pregunta de calificación general
+
+En una escala de 0 a 10, ¿qué tan probable es que recomiende el Sistema de Gestión Escolar a otra persona de la institución?
+
+- 0 = Nada probable
+- 10 = Muy probable
+
+## Pregunta abierta
+
+¿Qué es lo que más le gusta del sistema?
+
+## Pregunta abierta
+
+¿Qué es lo que más debería mejorarse?
+
+## Pregunta abierta
+
+Describa una dificultad concreta que haya tenido al utilizar el sistema.
+
+## Pregunta abierta
+
+¿Qué función le gustaría que se agregara?
+
+---
+
+# 12. Indicadores objetivos recomendados
+
+No conviene evaluar únicamente opiniones. ISO 9241-11 relaciona la usabilidad con **efectividad, eficiencia y satisfacción**. ([committee.iso.org](https://committee.iso.org/standard/63500.html?utm_source=openai))
+
+Por eso, además del formulario, se recomienda registrar:
+
+| Indicador | Forma de medición |
+|---|---|
+| Tasa de éxito | Porcentaje de usuarios que completan correctamente una tarea |
+| Tiempo de tarea | Tiempo utilizado para completar cada actividad |
+| Errores | Cantidad de errores cometidos |
+| Ayuda requerida | Número de veces que solicita apoyo |
+| Abandono | Usuarios que inician una tarea pero no la terminan |
+| Satisfacción | Promedio de las respuestas del cuestionario |
+| Accesibilidad | Problemas encontrados por usuarios con diferentes necesidades |
+| Uso por rol | Comparación entre estudiantes, docentes y directivos |
+
+---
+
+# 13. Sistema de puntuación
+
+## 13.1 Puntuación por dimensión
+
+Para cada dimensión:
+
+```text
+Puntuación de la dimensión =
+(suma de respuestas válidas / número de respuestas válidas) × 20
+```
+
+Esto convierte una escala de 1 a 5 en una escala de 0 a 100 aproximadamente.
+
+### Interpretación sugerida
+
+| Puntuación | Interpretación |
+|---:|---|
+| 0–39 | Muy deficiente |
+| 40–59 | Deficiente |
+| 60–74 | Aceptable con mejoras |
+| 75–89 | Buena |
+| 90–100 | Excelente |
+
+## 13.2 Dimensiones recomendadas
+
+Calcular resultados separados para:
+
+1. Utilidad y cumplimiento de objetivos.
+2. Facilidad de aprendizaje.
+3. Navegación y control.
+4. Formularios y errores.
+5. Seguridad y confianza.
+6. Organización visual.
+7. Tipografía, colores y legibilidad.
+8. Diseño responsive y móvil.
+9. Accesibilidad.
+10. Satisfacción general.
+
+## 13.3 Comparación entre roles
+
+Presentar los resultados de esta forma:
+
+| Dimensión | Estudiantes | Docentes | Directivos | Resultado general |
+|---|---:|---:|---:|---:|
+| Utilidad | — | — | — | — |
+| Facilidad de uso | — | — | — | — |
+| Navegación | — | — | — | — |
+| Interfaz visual | — | — | — | — |
+| Accesibilidad | — | — | — | — |
+| Seguridad y confianza | — | — | — | — |
+| Satisfacción | — | — | — | — |
+
+Es importante **no mezclar inicialmente los resultados de los tres roles**, porque cada uno realiza tareas diferentes. Un sistema puede ser fácil para un estudiante, pero complejo para un docente que registra asistencia o para un directivo que administra matrículas.
+
+---
+
+# 14. Fundamentación académica y normativa
+
+Puedes incluir el siguiente texto en tu trabajo:
+
+> El cuestionario fue diseñado para evaluar la experiencia de usuario y la interfaz de usuario del Sistema de Gestión Escolar desde la perspectiva de sus tres perfiles principales: estudiantes, docentes y directivos. La estructura considera la definición de usabilidad de ISO 9241-11, entendida como la capacidad de un sistema para ser utilizado por usuarios específicos con el fin de alcanzar objetivos determinados con efectividad, eficiencia y satisfacción. También se incorporaron las heurísticas de usabilidad de Jakob Nielsen, relacionadas con la visibilidad del estado del sistema, la correspondencia con el mundo real, el control del usuario, la consistencia, la prevención de errores y la recuperación ante errores.  
+>
+> La evaluación de accesibilidad se fundamenta en las WCAG 2.2 del W3C, organizadas bajo los principios de perceptibilidad, operabilidad, comprensibilidad y robustez. Además, se considera la Convención de las Naciones Unidas sobre los Derechos de las Personas con Discapacidad, particularmente sus disposiciones sobre el acceso igualitario a la información, las comunicaciones y las tecnologías. Para la protección de los datos personales se toma como referencia el principio de privacidad desde el diseño y por defecto establecido en el artículo 25 del Reglamento General de Protección de Datos de la Unión Europea.  
+>
+> La experiencia de usuario se aborda de manera amplia, considerando la interacción integral de la persona con el sistema, sus servicios, contenidos, mensajes, procesos y canales de comunicación. Esta perspectiva se relaciona con los planteamientos de Don Norman y Jakob Nielsen sobre UX. ([committee.iso.org](https://committee.iso.org/standard/63500.html?utm_source=openai))
+
+---
+
+# 15. Recomendación para implementarlo en Google Forms
+
+Configura el formulario con esta lógica:
+
+1. **Consentimiento informado**
+2. **Rol del participante**
+3. **Datos generales**
+4. **Preguntas generales de UX/UI**
+5. **Sección específica según el rol**
+   - Estudiante
+   - Docente
+   - Directivo/administrador
+6. **Accesibilidad**
+7. **Satisfacción general**
+8. **Preguntas abiertas**
+
+En Google Forms, utiliza:
+
+- **Escala lineal de 1 a 5** para las afirmaciones.
+- **Opción múltiple** para el rol y frecuencia.
+- **Casillas de verificación** para necesidades de accesibilidad.
+- **Respuesta larga** para observaciones.
+- **Saltos de sección según la respuesta** de la pregunta “¿Cuál es su rol?”.
+
+La aplicación del formulario debería ser anónima o utilizar códigos, no nombres completos, especialmente porque el sistema trata información académica y datos personales. El RGPD puede utilizarse como referencia internacional, aunque su aplicación jurídica directa depende de la ubicación de la institución y de las personas afectadas. ([eur-lex.europa.eu](https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CONSIL%3APE_17_2016_INIT&utm_source=openai))

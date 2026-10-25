@@ -1,0 +1,79 @@
+{
+  "entities": {
+    "SurveyResponse": {
+      "title": "SurveyResponse",
+      "description": "Respuesta al cuestionario de usabilidad y experiencia de usuario del Sistema de Gestión Escolar",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identificador único de la respuesta"
+        },
+        "submittedAt": {
+          "type": "string",
+          "description": "Fecha y hora de envío en formato ISO"
+        },
+        "participantCode": {
+          "type": "string",
+          "description": "Código aleatorio anónimo asignado al participante",
+          "maxLength": 64
+        },
+        "participantName": {
+          "type": "string",
+          "description": "Nombre completo del participante o evaluado",
+          "maxLength": 150
+        },
+        "role": {
+          "type": "string",
+          "enum": ["estudiante", "docente", "directivo"],
+          "description": "Rol del participante en la institución"
+        },
+        "frequency": {
+          "type": "string",
+          "description": "Frecuencia de uso del sistema",
+          "maxLength": 100
+        },
+        "device": {
+          "type": "string",
+          "description": "Dispositivo principal de uso",
+          "maxLength": 100
+        },
+        "techExperience": {
+          "type": "string",
+          "description": "Nivel de experiencia tecnológica auto-percibida",
+          "maxLength": 50
+        },
+        "accessibilityNeeds": {
+          "type": "string",
+          "description": "Condición o necesidad especial declarada",
+          "maxLength": 200
+        },
+        "scores": {
+          "type": "object",
+          "description": "Puntuaciones por dimensión calculadas en base 0-100"
+        },
+        "answers": {
+          "type": "object",
+          "description": "Respuestas a los ítems individuales en escala 1-5 o N/A"
+        },
+        "npsScore": {
+          "type": "number",
+          "description": "Calificación general o recomendación (0-10)"
+        },
+        "qualitative": {
+          "type": "object",
+          "description": "Respuestas a preguntas abiertas sobre fortalezas y mejoras"
+        }
+      },
+      "required": ["id", "submittedAt", "role", "npsScore"]
+    }
+  },
+  "firestore": {
+    "/survey_responses/{responseId}": {
+      "schema": {
+        "$ref": "#/entities/SurveyResponse"
+      },
+      "description": "Colección de respuestas registradas del cuestionario de evaluación UX/UI"
+    }
+  }
+}

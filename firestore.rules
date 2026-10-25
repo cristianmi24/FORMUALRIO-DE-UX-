@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Survey responses collection
+    match /survey_responses/{responseId} {
+      // Allow reading and listing survey responses for analysis & dashboard
+      allow get, list: if true;
+
+      // Allow anonymous academic submissions with schema validation
+      allow create: if isValidId(responseId)
+        && request.resource.data.role in ['estudiante', 'docente', 'directivo']
+        && request.resource.data.id is string
+        && request.resource.data.submittedAt is string;
+
+      // Allow administrative deletion from the institutional dashboard
+      allow delete: if isValidId(responseId);
+
+      // Prevent in-place modifications to preserve historical integrity
+      allow update: if false;
+    }
+
+    // Health / connection test collection
+    match /test/{docId} {
+      allow read: if true;
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Evaluación UX/UI - Sistema Escolar",
+  "description": "Servicio de recolección y análisis de cuestionarios de experiencia de usuario (UX) e interfaz (UI) para Sistemas de Gestión Escolar con sincronización Firebase.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
