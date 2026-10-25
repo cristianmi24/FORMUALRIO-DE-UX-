@@ -16,7 +16,6 @@ import {
   Lock, 
   LogOut, 
   ShieldCheck, 
-  FileCheck,
   User,
   Trash2,
   AlertTriangle,
@@ -28,7 +27,6 @@ import {
   getScoreInterpretation 
 } from '../data/questionnaireData';
 import { seedDemoResponses, exportToCSV, deleteSurveyResponse } from '../services/surveyService';
-import { ChecklistViewer } from './ChecklistViewer';
 
 interface AnalyticsDashboardProps {
   submissions: SurveySubmission[];
@@ -49,7 +47,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 }) => {
   const [selectedRoleFilter, setSelectedRoleFilter] = useState<'todos' | 'estudiante' | 'docente' | 'directivo'>('todos');
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<'resumen' | 'comparativa' | 'respuestas' | 'cualitativo' | 'check_pressman'>('resumen');
+  const [activeTab, setActiveTab] = useState<'resumen' | 'comparativa' | 'respuestas' | 'cualitativo'>('resumen');
   const [isSeeding, setIsSeeding] = useState(false);
   const [seedSuccessMsg, setSeedSuccessMsg] = useState<string | null>(null);
   const [itemToDelete, setItemToDelete] = useState<SurveySubmission | null>(null);
@@ -166,7 +164,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               Panel Institucional de Evaluación y Resultados
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Auditoría y análisis de usabilidad según la Lista de Chequeo de Pressman & Maxim (Cap. 12, 13 y 14).
+              Resultados y análisis de usabilidad del cuestionario institucional.
             </p>
           </div>
 
@@ -302,7 +300,6 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           { id: 'comparativa', label: '2. Comparativa por Rol (Sec. 13.3)', icon: Users },
           { id: 'cualitativo', label: '3. Hallazgos Cualitativos', icon: Sparkles },
           { id: 'respuestas', label: `4. Registros Firestore (${filteredSubmissions.length})`, icon: Database },
-          { id: 'check_pressman', label: '5. Verificación Pressman & Maxim (Rubric)', icon: FileCheck },
         ].map((tab) => {
           const Icon = tab.icon;
           return (
@@ -692,11 +689,6 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             )}
           </div>
         </div>
-      )}
-
-      {/* TAB 5: RUBRIC LISTA DE CHEQUEO PRESSMAN & MAXIM */}
-      {activeTab === 'check_pressman' && (
-        <ChecklistViewer />
       )}
 
       {/* CONFIRM DELETE MODAL (Mandel Rule 1: User in control, prevent accidental data loss) */}

@@ -23,7 +23,7 @@
     font-family: var(--font-mono);
   }
 
-  /* Universal WCAG focus ring (UX-07 checklist) */
+  /* Universal WCAG focus ring */
   :focus-visible {
     outline: 2px solid #2563eb;
     outline-offset: 2px;

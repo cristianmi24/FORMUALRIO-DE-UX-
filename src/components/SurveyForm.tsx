@@ -393,7 +393,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
             <span className="text-xs text-slate-500 font-mono">ID: {participantCode}</span>
           </div>
           <h1 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mt-0.5">
-            Sistema de Gestión Escolar • Lista Pressman & Maxim
+            Sistema de Gestión Escolar • Cuestionario de Usabilidad
           </h1>
         </div>
 

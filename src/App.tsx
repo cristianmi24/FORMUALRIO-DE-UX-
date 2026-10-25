@@ -15,7 +15,6 @@ import {
   School,
   Lock,
   Keyboard,
-  FileCheck,
   LogOut,
   WifiOff
 } from 'lucide-react';
@@ -26,10 +25,9 @@ import { SurveyForm } from './components/SurveyForm';
 import { AnalyticsDashboard } from './components/AnalyticsDashboard';
 import { AdminLoginModal } from './components/AdminLoginModal';
 import { ShortcutsModal } from './components/ShortcutsModal';
-import { ChecklistViewer } from './components/ChecklistViewer';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'survey' | 'dashboard' | 'checklist'>('survey');
+  const [currentView, setCurrentView] = useState<'survey' | 'dashboard'>('survey');
   const [submissions, setSubmissions] = useState<SurveySubmission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [firebaseConnected, setFirebaseConnected] = useState(false);
@@ -240,19 +238,6 @@ export default function App() {
               <span>Panel Institucional</span>
               {!authenticatedUser && <Lock className="w-3 h-3 text-slate-400" />}
             </button>
-
-            <button
-              type="button"
-              onClick={() => setCurrentView('checklist')}
-              className={`py-1 flex items-center gap-1.5 transition-colors whitespace-nowrap ${
-                currentView === 'checklist'
-                  ? 'text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 font-bold'
-                  : 'hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <FileCheck className="w-3.5 h-3.5 text-blue-600" />
-              <span>Lista Pressman & Maxim</span>
-            </button>
           </nav>
 
           {/* Zone 3: Primary action & accessibility toggles */}
@@ -355,11 +340,6 @@ export default function App() {
             onLogout={handleLogout}
           />
         )}
-
-        {currentView === 'checklist' && (
-          <ChecklistViewer />
-        )}
-
       </main>
 
       {/* Mobile Bottom Navigation Bar (Pressman MOB-01 & MOB-02) */}
@@ -401,22 +381,6 @@ export default function App() {
 
         <button
           type="button"
-          onClick={() => {
-            setCurrentView('checklist');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          className={`flex min-h-12 min-w-[56px] flex-col items-center justify-center rounded-xl px-2 py-1.5 transition-all ${
-            currentView === 'checklist'
-              ? 'text-blue-700 dark:text-blue-400 font-bold'
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-800'
-          }`}
-        >
-          <FileCheck className="w-5 h-5 mb-0.5 text-blue-600 dark:text-blue-400" />
-          <span className="text-[10px]">Checklist</span>
-        </button>
-
-        <button
-          type="button"
           onClick={() => setIsShortcutsOpen(true)}
           className="flex min-h-12 min-w-[56px] flex-col items-center justify-center rounded-xl px-2 py-1.5 text-slate-500 transition-all hover:text-slate-800 dark:text-slate-400"
         >
@@ -431,7 +395,7 @@ export default function App() {
           Universidad de Córdoba • Departamento de Informática Educativa
         </p>
         <p className="text-[11px] text-slate-400">
-          Diseño de Interfaces de Usuario • Lista de Chequeo según Roger S. Pressman & Bruce R. Maxim (9ª Edición)
+          Diseño de Interfaces de Usuario • Cuestionario institucional de usabilidad
         </p>
       </footer>
 
